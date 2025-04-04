@@ -1,0 +1,48 @@
+version: '3.9'
+
+services:
+  postgres:
+    build:
+      context: ./docker/postgres
+      dockerfile: Dockerfile
+    container_name: hai_postgres
+    hostname: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - hai_network
+    ports:
+      - "5432:5432"
+
+  keycloak:
+    build:
+      context: ./docker/keycloak
+      dockerfile: Dockerfile
+    container_name: keycloak_server
+    hostname: keycloak
+    environment:
+      DB_VENDOR: postgres
+      DB_ADDR: postgres
+      DB_DATABASE: keycloak
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    command: ["start", "--optimized"]
+    ports:
+      - "8080:8080"
+      - "8443:8443"
+      - "9000:9000"
+    depends_on:
+      - postgres
+    networks:
+      - hai_network
+
+volumes:
+  postgres_data:
+
+networks:
+  hai_network:

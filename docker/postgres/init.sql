@@ -1,0 +1,5 @@
+CREATE DATABASE keycloak;
+
+CREATE USER postgres WITH PASSWORD 'postgres';
+
+GRANT ALL PRIVILEGES ON DATABASE keycloak TO postgres;
